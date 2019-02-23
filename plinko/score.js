@@ -6,21 +6,25 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 
 function runAnalysis() {
   const testSetSize = 100;
-  const [testSet, trainingSet] = splitDataSet(
-    normalizeData(output, 1),
-    testSetSize
-  );
+  const k = 10;
 
-  _.range(1, 20).forEach(k => {
+  _.range(0, 3).forEach(feature => {
+    const data = _.map(output, row => [row[feature], _.last(row)]);
+    const [testSet, trainingSet] = splitDataSet(
+      normalizeData(data, 1),
+      testSetSize
+    );
+
     const accuracy = _.chain(testSet)
       .filter(
-        testData => knn(trainingSet, _.initial(testData), k) === testData[3]
+        testData =>
+          knn(trainingSet, _.initial(testData), k) === _.last(testData)
       )
       .size()
       .divide(testSetSize)
       .value();
 
-    console.log(`K: ${k} & Accuracy: ${accuracy}`);
+    console.log(`Feature: ${feature} & Accuracy: ${accuracy}`);
   });
 }
 
