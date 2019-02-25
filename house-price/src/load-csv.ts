@@ -2,9 +2,10 @@
  * File was provided by StephenGrider.
  * https://github.com/StephenGrider/MLKits/blob/master/knn-tf/load-csv.js
  */
-const fs = require('fs');
-const _ = require('lodash');
-const shuffleSeed = require('shuffle-seed');
+import fs from 'fs';
+import _ from 'lodash';
+import shuffleSeed from 'shuffle-seed';
+import path from 'path';
 
 function extractColumns(data, columnNames) {
   const headers = _.first(data);
@@ -15,17 +16,27 @@ function extractColumns(data, columnNames) {
   return extracted;
 }
 
-module.exports = function loadCSV(
-  filename,
+export interface LoadOptionProps {
+  dataColumns?: string[];
+  labelColumns?: string[];
+  converters?: any;
+  shuffle?: boolean;
+  splitTest?: number;
+}
+
+export default function loadCSV(
+  filename: string,
   {
     dataColumns = [],
     labelColumns = [],
     converters = {},
     shuffle = false,
-    splitTest = false
-  }
+    splitTest = 0
+  }: LoadOptionProps
 ) {
-  let data = fs.readFileSync(filename, { encoding: 'utf-8' });
+  let data: any = fs.readFileSync(path.resolve(__dirname, filename), {
+    encoding: 'utf-8'
+  });
   data = _.map(data.split('\n'), d => d.split(','));
   data = _.dropRightWhile(data, val => _.isEqual(val, ['']));
   const headers = _.first(data);
@@ -70,4 +81,4 @@ module.exports = function loadCSV(
   } else {
     return { features: data, labels };
   }
-};
+}
