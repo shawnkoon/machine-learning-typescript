@@ -1,0 +1,27 @@
+{
+  "name": "house-price",
+  "version": "1.0.0",
+  "description": "\"House price estimator app in TypeScript with TensorFlow.\"",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "rimraf dist && tsc --build tsconfig.json",
+    "build:prod": "rimraf dist && tsc --build tsconfig.prod.json",
+    "start": "ts-node src/index.ts",
+    "start:dev": "nodemon --watch 'src/**/**.ts' --exec 'ts-node' src/index.ts",
+    "start:prod": "npm run build:prod && node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^0.3.0",
+    "lodash": "^4.17.11",
+    "shuffle-seed": "^1.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^11.9.5",
+    "nodemon": "^1.18.10",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3333"
+  }
+}
