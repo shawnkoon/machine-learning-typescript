@@ -1,5 +1,6 @@
 // Lib
-import * as tf from '@tensorflow/tfjs-core';
+import '@tensorflow/tfjs-node';
+import * as tf from '@tensorflow/tfjs';
 
 // App
 import loadCSV, { LoadOptionProps } from './load-csv';
@@ -9,7 +10,8 @@ type Tensor = tf.Tensor;
 interface IHousePriceKNN {
   print(): void;
   test(): void;
-  knn(predictionTensor: Tensor): number;
+  knn(prediction: Tensor): number;
+  standardize(target: Tensor, mean: Tensor, variance: Tensor): Tensor;
 }
 
 interface HousePriceKNNProps {
@@ -36,10 +38,18 @@ class HousePriceKNN implements IHousePriceKNN {
     this.testLabels = tf.tensor(data.testLabels);
   }
 
-  public knn(predictionTensor: Tensor): number {
+  public knn(prediction: Tensor): number {
+    const { mean, variance } = tf.moments(this.features, 0);
+
+    const scaledPrediction: Tensor = this.standardize(
+      prediction,
+      mean,
+      variance
+    );
+
     return (
-      this.features
-        .sub(predictionTensor)
+      this.standardize(this.features, mean, variance)
+        .sub(scaledPrediction)
         .pow(2)
         .sum(1)
         .expandDims(1)
@@ -54,15 +64,31 @@ class HousePriceKNN implements IHousePriceKNN {
     );
   }
 
+  public standardize(target: Tensor, mean: Tensor, variance: Tensor): Tensor {
+    return target.sub(mean).div(variance.pow(0.5));
+  }
+
   public print(): void {
     console.log(this.testFeatures);
     console.log(this.testLabels);
   }
 
-  public async test(): Promise<void> {
-    const x = await this.testFeatures.array();
-    const y = await this.testLabels.array();
-    console.log('Guess', this.knn(tf.tensor(x[0])), y[0]);
+  public test(): void {
+    const x = <number[][]>this.testFeatures.arraySync();
+    const testTarget = <number[][]>this.testLabels.arraySync();
+
+    x.forEach((testFeatures, i) => {
+      const predictionPrice = this.knn(tf.tensor(testFeatures));
+      const realPrice = testTarget[i][0];
+      const err = ((realPrice - predictionPrice) / realPrice) * 100;
+      console.log(
+        'Prediction:',
+        predictionPrice,
+        'Real:',
+        realPrice,
+        `Error: ${err}%`
+      );
+    });
   }
 }
 
@@ -72,10 +98,10 @@ const analyzer = new HousePriceKNN({
   loadOptions: {
     shuffle: true,
     splitTest: 10,
-    dataColumns: ['lat', 'long'],
+    dataColumns: ['lat', 'long', 'sqft_lot', 'sqft_living'],
     labelColumns: ['price']
   }
 });
 
-analyzer.print();
+// analyzer.print();
 analyzer.test();
