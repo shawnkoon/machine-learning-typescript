@@ -1,5 +1,5 @@
 /**
- * File was provided by StephenGrider.
+ * Original JS file was provided by StephenGrider.
  * https://github.com/StephenGrider/MLKits/blob/master/knn-tf/load-csv.js
  */
 import fs from 'fs';
