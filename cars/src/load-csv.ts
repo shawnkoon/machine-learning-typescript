@@ -5,6 +5,7 @@
 import fs from 'fs';
 import _ from 'lodash';
 import shuffleSeed from 'shuffle-seed';
+import path from 'path';
 
 function extractColumns(data, columnNames) {
   const headers = _.first(data);
@@ -23,6 +24,13 @@ export interface LoadOptionProps {
   splitTest?: number;
 }
 
+export interface LoadResult {
+  features: number[][];
+  labels: number[][];
+  testFeatures?: number[][];
+  testLabels?: number[][];
+}
+
 export default function loadCSV(
   filename: string,
   {
@@ -32,8 +40,10 @@ export default function loadCSV(
     shuffle = false,
     splitTest = 0
   }: LoadOptionProps
-) {
-  let data: any = fs.readFileSync(filename, { encoding: 'utf-8' });
+): LoadResult {
+  let data: any = fs.readFileSync(path.resolve(__dirname, filename), {
+    encoding: 'utf-8'
+  });
   data = _.map(data.split('\n'), d => d.split(','));
   data = _.dropRightWhile(data, val => _.isEqual(val, ['']));
   const headers = _.first(data);
