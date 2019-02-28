@@ -1,0 +1,32 @@
+{
+  "name": "cars",
+  "version": "1.0.0",
+  "description": "Cars application to practice linear regressions",
+  "main": "dist/index.js",
+  "scripts": {
+    "move:csv": "cp src/cars.csv dist/cars.csv",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc --build tsconfig.json",
+    "build:prod": "npm run clean && tsc --build tsconfig.prod.json && npm run move:csv",
+    "start": "ts-node src/index.ts",
+    "start:dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "start:prod": "npm run build:prod && node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^11.9.5",
+    "nodemon": "^1.18.10",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^0.3.1",
+    "lodash": "^4.17.11",
+    "memoize": "^0.1.1",
+    "mnist-data": "^1.2.6",
+    "node-remote-plot": "^1.3.0",
+    "shuffle-seed": "^1.1.6"
+  }
+}
