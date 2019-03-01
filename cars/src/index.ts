@@ -13,14 +13,18 @@ const { features, labels, testFeatures, testLabels } = loadCSV('cars.csv', {
   labelColumns: ['mpg']
 });
 
-const regression = new LinearRegression(
-  tf.tensor(features),
-  tf.tensor(labels),
-  { learningRate: 0.0001, iterations: 100 }
-);
+const featuresTensor = tf.tensor(features);
+const labelsTensor = tf.tensor(labels);
+const testFeaturesTensor = tf.tensor(<Array<Array<number>>>testFeatures);
+const testLabelsTensor = tf.tensor(<Array<Array<number>>>testLabels);
+
+const regression = new LinearRegression(featuresTensor, labelsTensor, {
+  learningRate: 0.0001,
+  iterations: 100
+});
 
 regression.train();
 
-const weights = <number[][]>regression.weights.arraySync();
-
-console.log('\nUpdated M is:', weights[1][0], 'Updated B is:', weights[0][0]);
+regression
+  .test(testFeaturesTensor, testLabelsTensor)
+  .then(r2 => console.log('r2 is', r2));
