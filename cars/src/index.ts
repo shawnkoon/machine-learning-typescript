@@ -9,7 +9,7 @@ import LinearRegression from './LinearRegression';
 const { features, labels, testFeatures, testLabels } = loadCSV('cars.csv', {
   shuffle: true,
   splitTest: 50,
-  dataColumns: ['horsepower'],
+  dataColumns: ['horsepower', 'weight', 'displacement'],
   labelColumns: ['mpg']
 });
 
@@ -19,7 +19,7 @@ const testFeaturesTensor = tf.tensor(<Array<Array<number>>>testFeatures);
 const testLabelsTensor = tf.tensor(<Array<Array<number>>>testLabels);
 
 const regression = new LinearRegression(featuresTensor, labelsTensor, {
-  learningRate: 0.0001,
+  learningRate: 10,
   iterations: 100
 });
 

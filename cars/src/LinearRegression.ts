@@ -18,10 +18,12 @@ class LinearRegression implements LRProps {
   public weights: Tensor;
   public mean: Tensor | undefined;
   public variance: Tensor | undefined;
+  public mseHistory: number[];
 
   constructor(public features: Tensor, public labels: Tensor, public options: Options) {
     this.features = this.processFeatures(features);
-    this.weights = tf.zeros([2, 1]);
+    this.weights = tf.zeros([<number>this.features.shape[1], 1]);
+    this.mseHistory = [];
   }
 
   /**
@@ -32,17 +34,19 @@ class LinearRegression implements LRProps {
     const currentGuesses = this.features.matMul(this.weights);
     const differences = currentGuesses.sub(this.labels);
 
-    const slopes = this.features
+    const slopesOfMSE = this.features
       .transpose()
       .matMul(differences)
       .div(this.features.shape[0]);
 
-    this.weights = this.weights.sub(slopes.mul(this.options.learningRate));
+    this.weights = this.weights.sub(slopesOfMSE.mul(this.options.learningRate));
   }
 
   train() {
     for (let i = 0; i < this.options.iterations; i++) {
       this.gradientDescent();
+      this.recordMSE();
+      this.updateLearningRate();
     }
   }
 
@@ -98,6 +102,30 @@ class LinearRegression implements LRProps {
     this.variance = variance;
 
     return features.sub(mean).div(variance.pow(0.5));
+  }
+
+  private recordMSE() {
+    const mse = <number>this.features
+      .matMul(this.weights)
+      .sub(this.labels)
+      .pow(2)
+      .sum()
+      .div(this.features.shape[0])
+      .arraySync();
+
+    this.mseHistory.unshift(mse);
+  }
+
+  private updateLearningRate() {
+    if (this.mseHistory.length < 2) {
+      return;
+    }
+
+    if (this.mseHistory[0] > this.mseHistory[1]) {
+      this.options.learningRate /= 2;
+    } else {
+      this.options.learningRate *= 1.05;
+    }
   }
 }
 
