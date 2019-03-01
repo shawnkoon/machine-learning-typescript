@@ -14,16 +14,17 @@ export interface LRProps {
 }
 
 class LinearRegression implements LRProps {
-  public m: number;
-  public b: number;
+  public weights: Tensor;
 
   constructor(
     private features: Tensor,
     private labels: Tensor,
     private options: Options
   ) {
-    this.m = 0;
-    this.b = 0;
+    this.features = tf
+      .ones([this.features.shape[0], 1])
+      .concat(this.features, 1);
+    this.weights = tf.zeros([2, 1]);
   }
 
   train() {
@@ -32,31 +33,19 @@ class LinearRegression implements LRProps {
     }
   }
 
+  /**
+   * Version #1 of this function can be found git hash f0e85eb.
+   */
   gradientDescent() {
-    const features = <number[][]>this.features.arraySync();
-    const labels = <number[][]>this.labels.arraySync();
+    const currentGuesses = this.features.matMul(this.weights);
+    const differences = currentGuesses.sub(this.labels);
 
-    const bSlope =
-      (_.sum(
-        features.map(
-          (feature, i) => this.m * feature[0] + this.b - labels[i][0]
-        )
-      ) *
-        2) /
-      features.length;
+    const slopes = this.features
+      .transpose()
+      .matMul(differences)
+      .div(this.features.shape[0]);
 
-    const mSlope =
-      (_.sum(
-        features.map(
-          (feature, i) =>
-            -1 * feature[0] * (labels[i][0] - this.m * feature[0] + this.b)
-        )
-      ) *
-        2) /
-      features.length;
-
-    this.m = this.m - this.options.learningRate * mSlope;
-    this.b = this.b - this.options.learningRate * bSlope;
+    this.weights = this.weights.sub(slopes.mul(this.options.learningRate));
   }
 }
 

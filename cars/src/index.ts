@@ -16,9 +16,11 @@ const { features, labels, testFeatures, testLabels } = loadCSV('cars.csv', {
 const regression = new LinearRegression(
   tf.tensor(features),
   tf.tensor(labels),
-  { learningRate: 0.000001, iterations: 1000 }
+  { learningRate: 0.0001, iterations: 100 }
 );
 
 regression.train();
 
-console.log('\nUpdated M is:', regression.m, 'Updated B is:', regression.b);
+const weights = <number[][]>regression.weights.arraySync();
+
+console.log('\nUpdated M is:', weights[1][0], 'Updated B is:', weights[0][0]);

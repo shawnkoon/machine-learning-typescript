@@ -22,7 +22,9 @@ App to create Linear Regression algorithm and apply to car data set.
 
 3. **Gradient Descent** Algorithm _(Linear Regression)_
 
-   - We are trying to estimate good M(Slope) and B(Starting) value for our linear equation. One algorithm we can apply here is **Gradient Descent** which essentially is reducing M & B value with learning rate then recursively execute same deduction until we some convergence.
+   - `v1`, We are trying to estimate good M(Slope) and B(Starting) value for our linear equation. One algorithm we can apply here is **Gradient Descent** which essentially is reducing M & B value with learning rate then recursively execute same deduction until we some convergence.
+
+   - `v2` using vectorized solution. We take derivative form Mean squared error slope equations, turn operations into Matrix multiplications (utilizing it's sum) to find final M & B after a **Descent**.
 
 4. Use **Test Set** and **Training Set**.
 
