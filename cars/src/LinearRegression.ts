@@ -4,14 +4,16 @@ import _ from 'lodash';
 
 type Tensor = tf.Tensor;
 type Options = {
-  learningRate: number;
+  batchSize: number;
   iterations: number;
+  learningRate: number;
 };
 
 export interface LRProps {
   train(): void;
-  gradientDescent(): void;
+  gradientDescent(features: Tensor, labels: Tensor): void;
   test(testFeatures: Tensor, testLabels: Tensor): Promise<number>;
+  predict(observations: Tensor): Tensor;
 }
 
 class LinearRegression implements LRProps {
@@ -29,25 +31,38 @@ class LinearRegression implements LRProps {
   /**
    * Version #1 of this function can be found git hash f0e85eb.
    */
-  gradientDescent() {
+  gradientDescent(features: Tensor, labels: Tensor) {
     // 2D array of mx + b
-    const currentGuesses = this.features.matMul(this.weights);
-    const differences = currentGuesses.sub(this.labels);
+    const currentGuesses = features.matMul(this.weights);
+    const differences = currentGuesses.sub(labels);
 
-    const slopesOfMSE = this.features
+    const slopesOfMSE = features
       .transpose()
       .matMul(differences)
-      .div(this.features.shape[0]);
+      .div(features.shape[0]);
 
     this.weights = this.weights.sub(slopesOfMSE.mul(this.options.learningRate));
   }
 
   train() {
-    for (let i = 0; i < this.options.iterations; i++) {
-      this.gradientDescent();
+    const { batchSize, iterations } = this.options;
+    const batchQuantity = Math.floor(this.features.shape[0] / batchSize);
+
+    for (let i = 0; i < iterations; i++) {
+      for (let j = 0; j < batchQuantity; j++) {
+        const startIndex = j * batchSize;
+
+        const featureSlice = this.features.slice([startIndex, 0], [batchSize, -1]);
+        const labelSlice = this.labels.slice([startIndex, 0], [batchSize, -1]);
+        this.gradientDescent(featureSlice, labelSlice);
+      }
       this.recordMSE();
       this.updateLearningRate();
     }
+  }
+
+  predict(observations: Tensor): Tensor {
+    return this.processFeatures(observations).matMul(this.weights);
   }
 
   /**
