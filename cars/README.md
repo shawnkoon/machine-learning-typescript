@@ -28,15 +28,28 @@ App to create Linear Regression algorithm and apply to car data set.
 
 4. Use **Test Set** and **Training Set**.
 
+   - Test set is used to test against LinearRegression class to how accurate the trained weight is by checking the **Coefficient of Determination**. Which the more closer we get to value `1` the better estimate we can generate.
+
 5. Data **Normalization** vs **Standardization**.
 
-6. Perform **Feature Selection**.
+   - To improve accruacy, we decided to **Standardize** data set. Just basic execution using mean and variance.
+
+6. Perform **Performance Enhancement**.
+
+   - After implmeneting the linear regression algorithm, applied bath/stochastic gradient descent method to enhance performance of the algorithm. By reducing possible MSE value per execution.
 
 ## Output
 
 ```bash
 
 $ npm run start
+
+...
+
+Tensor // predict
+    [[...]]
+
+r2 is ... // Coefficient of Determination value indicating accuracy of current linear regression function.
 ...
 ```
 
