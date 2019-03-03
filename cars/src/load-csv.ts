@@ -1,6 +1,6 @@
 /**
- * Original JS file was provided by StephenGrider.
- * https://github.com/StephenGrider/MLKits/blob/master/knn-tf/load-csv.js
+ * Original js file was provided by StephenGrider.
+ * https://github.com/StephenGrider/MLKits/blob/master/regression/load-csv.js
  */
 import fs from 'fs';
 import _ from 'lodash';
@@ -24,6 +24,13 @@ export interface LoadOptionProps {
   splitTest?: number;
 }
 
+export interface LoadResult {
+  features: number[][];
+  labels: number[][];
+  testFeatures?: number[][];
+  testLabels?: number[][];
+}
+
 export default function loadCSV(
   filename: string,
   {
@@ -33,7 +40,7 @@ export default function loadCSV(
     shuffle = false,
     splitTest = 0
   }: LoadOptionProps
-) {
+): LoadResult {
   let data: any = fs.readFileSync(path.resolve(__dirname, filename), {
     encoding: 'utf-8'
   });

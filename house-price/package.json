@@ -4,8 +4,10 @@
   "description": "\"House price estimator app in TypeScript with TensorFlow.\"",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "rimraf dist && tsc --build tsconfig.json",
-    "build:prod": "rimraf dist && tsc --build tsconfig.prod.json",
+    "move:csv": "cp src/kc_house_data.csv dist/kc_house_data.csv",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc --build tsconfig.json",
+    "build:prod": "npm run clean && tsc --build tsconfig.prod.json && move:csv",
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon --watch 'src/**/**.ts' --exec 'ts-node' src/index.ts",
     "start:prod": "npm run build:prod && node dist/index.js"
