@@ -12,7 +12,7 @@ type Options = {
 export interface LRProps {
   train(): void;
   gradientDescent(features: Tensor, labels: Tensor): void;
-  test(testFeatures: Tensor, testLabels: Tensor): Promise<number>;
+  test(testFeatures: Tensor, testLabels: Tensor): number;
   predict(observations: Tensor): Tensor;
 }
 
@@ -69,23 +69,23 @@ class LinearRegression implements LRProps {
    * Test existing linear regression algorithm against test data set.
    * returns back with **Coefficient of Determination** of test set.
    */
-  async test(testFeatures: Tensor, testLabels: Tensor): Promise<number> {
+  test(testFeatures: Tensor, testLabels: Tensor): number {
     testFeatures = this.processFeatures(testFeatures);
 
     // 2D array of mx + b.
     const predictions = testFeatures.matMul(this.weights);
 
-    const ssResiduals = <number>await testLabels
+    const ssResiduals = <number>testLabels
       .sub(predictions)
       .pow(2)
       .sum()
-      .array();
+      .arraySync();
 
-    const ssTotal = <number>await testLabels
+    const ssTotal = <number>testLabels
       .sub(testLabels.mean())
       .pow(2)
       .sum()
-      .array();
+      .arraySync();
 
     return 1 - ssResiduals / ssTotal;
   }

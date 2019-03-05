@@ -4,13 +4,14 @@
   "description": "Cars application to practice linear regressions",
   "main": "dist/index.js",
   "scripts": {
-    "move:csv": "cp src/cars.csv dist/cars.csv",
+    "move:csv": "cp src/data/cars.csv dist/data/cars.csv",
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc --build tsconfig.json",
-    "build:prod": "npm run clean && tsc --build tsconfig.prod.json && npm run move:csv",
+    "build": "npm run clean && npm run tempfix && tsc --build tsconfig.json",
+    "build:prod": "npm run clean && npm run tempfix && tsc --build tsconfig.prod.json && npm run move:csv",
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-    "start:prod": "npm run build:prod && node dist/index.js"
+    "start:prod": "npm run build:prod && node dist/index.js",
+    "tempfix": "./tfjs_tsc_fix.sh"
   },
   "author": "",
   "license": "ISC",
