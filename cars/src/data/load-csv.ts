@@ -19,7 +19,7 @@ function extractColumns(data, columnNames) {
 export interface LoadOptionProps {
   dataColumns?: string[];
   labelColumns?: string[];
-  converters?: any;
+  converters?: { [column: string]: (value: any) => any };
   shuffle?: boolean;
   splitTest?: number;
 }
@@ -75,9 +75,7 @@ export default function loadCSV(
   }
 
   if (splitTest) {
-    const trainSize = _.isNumber(splitTest)
-      ? splitTest
-      : Math.floor(data.length / 2);
+    const trainSize = _.isNumber(splitTest) ? splitTest : Math.floor(data.length / 2);
 
     return {
       features: data.slice(trainSize),
