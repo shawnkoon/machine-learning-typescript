@@ -1,7 +1,9 @@
 # machine-learning-typescript
 
-![Typescript](/static/typescript.png =250x250)
-![Tensorflow](./static/tensorflow.png =250x250)
+<p float="left">
+    <img src="./static/typescript.png" alt="typescript" width="250" height="250" />
+    <img src="./static/tensorflow.png" alt="tensorflow" width="250" height="250" />
+</p>
 
 **Machine Learning apps using JavaScript/TypeScript with Tensorflow.**
 
@@ -18,7 +20,7 @@
 
 ### **[Plinko Application](./plinko/README.md)**
 
-![Plinko App](./static/plinko.png)
+<img src="./static/plinko.png" alt="plinko" width="650" height="400" />
 
 - Goal:
   - > Given some data about where a ball is dropped from, can we predict what bucket it will end up in?
