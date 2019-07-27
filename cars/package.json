@@ -20,11 +20,12 @@
     "nodemon": "^1.18.10",
     "rimraf": "^2.6.3",
     "ts-node": "^8.0.2",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.3.3333",
+    "axios": "^0.18.1"
   },
   "dependencies": {
     "@tensorflow/tfjs-node": "^0.3.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "memoize": "^0.1.1",
     "mnist-data": "^1.2.6",
     "node-remote-plot": "^1.3.0",
