@@ -21,7 +21,7 @@
     "rimraf": "^2.6.3",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3333",
-    "axios": "^0.18.1"
+    "axios": "^0.21.1"
   },
   "dependencies": {
     "@tensorflow/tfjs-node": "^0.3.1",
