@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@tensorflow/tfjs-node": "^0.3.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "shuffle-seed": "^1.1.6"
   },
   "devDependencies": {
